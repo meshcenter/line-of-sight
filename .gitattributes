@@ -1,0 +1,6 @@
+data/ filter=lfs diff=lfs merge=lfs -text
+data/buildingData.csv filter=lfs diff=lfs merge=lfs -text
+data/buildingData.json filter=lfs diff=lfs merge=lfs -text
+data/citygml filter=lfs diff=lfs merge=lfs -text
+data/pad filter=lfs diff=lfs merge=lfs -text
+data/permits filter=lfs diff=lfs merge=lfs -text
