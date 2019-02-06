@@ -4,6 +4,9 @@
 # Forked from: https://github.com/Oslandia/citygml2pgsql
 
 """Convert CityGML buildings to PostreSQL statements for insertion in table
+Before running the script, ensure that your database contains the right table.
+To create the table, run:
+    CREATE TABLE ny(gid SERIAL PRIMARY KEY, bldg_id varchar(255), geom GEOMETRY('POLYGON', 2263))
 
 USAGE
     gml_to_pgsql file1.gml table_name
@@ -91,7 +94,7 @@ def run_psql(filename, table_name):
             polys = filter(None, all_polys)
 
             if len(polys) != 0:
-                sql = "INSERT INTO {} (geom, bldg_id) VALUES ('SRID=2263; POLYGON({})'::geometry, '{}');".format(
+                sql = "INSERT INTO {} (geom, bldg_id) VALUES ('SRID=2263; MULTIPOLYGON({})'::geometry, '{}');".format(
                     table_name, ','.join(polys), bldg_id)
                 print sql
             else:
