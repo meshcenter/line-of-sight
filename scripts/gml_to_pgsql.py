@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # coding: utf-8
 
 # Forked from: https://github.com/Oslandia/citygml2pgsql
@@ -88,17 +87,15 @@ def run_psql(filename, table_name):
     for building in root.iter(insert_namespace('Building', root)):
         bldg_id = building.get("{http://www.opengis.net/gml}id")
 
-        # Get the RoofSurface tags
-        for roof in building.iter(insert_namespace('RoofSurface', building), building):
-            all_polys = [polygon_to_wkt(p) for p in roof.iter(insert_namespace('Polygon', roof), roof)]
-            polys = filter(None, all_polys)
+        # Get the polygons for this building
+        polys = [polygon_to_wkt(p) for p in building.iter(insert_namespace('Polygon', building))]
 
-            if len(polys) != 0:
-                sql = "INSERT INTO {} (geom, bldg_id) VALUES ('SRID=2263; MULTIPOLYGON({})'::geometry, '{}');".format(
-                    table_name, ','.join(polys), bldg_id)
-                print sql
-            else:
-                sys.stderr.write( 'degenerate building geometry gml:id={}'.format(bldg_id))
+        if polys != None:
+            sql = "INSERT INTO {} (geom, bldg_id) VALUES ('SRID=2263; MULTIPOLYGON({})'::geometry, '{}');".format(
+                table_name, ','.join(polys), bldg_id)
+            print(sql)
+        else:
+            sys.stderr.write( 'degenerate building geometry gml:id={}'.format(bldg_id))
 
 if __name__ == '__main__':
     gml = sys.argv[1]
