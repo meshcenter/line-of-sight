@@ -38,7 +38,14 @@ Now we are ready to make queries!
 
 Let's check for line of sight between [Supernode 1 and Node 3](https://www.nycmesh.net/map/nodes/227-3).
 
-Get building midpoints:
+### Step 1: Look up BINs:
+
+Use [NYC GeoSearch](https://geosearch.planninglabs.nyc/docs/) or [NYC Building Information Search](http://a810-bisweb.nyc.gov/bisweb/bispi00.jsp).
+
+Supernode 1 BIN: `1001389`  
+Node 3 BIN: `1006184`
+
+### Step 2: Get building midpoints:
 
 ```sql
 SELECT ST_AsText(ST_Centroid((SELECT geom FROM ny WHERE bldg_bin = '1001389'))) as a,
@@ -49,18 +56,27 @@ ST_AsText(ST_Centroid((SELECT geom FROM ny WHERE bldg_bin = '1006184'))) as b;
 # (1 row)
 ```
 
-Check for intersections:
+### Step 3: Get building heights:
+
+```sql
+SELECT ST_ZMax((SELECT geom FROM ny WHERE bldg_bin = '1001389')) as a,
+ST_ZMax((SELECT geom FROM ny WHERE bldg_bin = '1006184')) as b;
+#         a         |        b         
+# ------------------+------------------
+#  582.247499999998 | 120.199699999997
+# (1 row)
+```
+
+
+### Step 4: Check for intersections:
 
 ```sql
 SELECT a.bldg_bin
 FROM ny AS a
-# Use midpoints from previous step (estimate z for now)
-WHERE ST_3DIntersects(a.geom, ST_SetSRID('LINESTRINGZ (983915 198271 400, 987642 203357 100)'::geometry, 2263));
+WHERE ST_3DIntersects(a.geom, ST_SetSRID('LINESTRINGZ (983915 198271 582, 987642 203357 120)'::geometry, 2263));
 #  bldg_bin
 # ----------
-#  1001389
-#  1006184
-# (2 rows)
+# (0 rows)
 ```
 
-There are no intersections (the buildings themselves don't count). We have line of sight!
+There are no intersections. We have line of sight!
