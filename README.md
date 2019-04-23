@@ -80,3 +80,10 @@ WHERE ST_3DIntersects(a.geom, ST_SetSRID('LINESTRINGZ (983915 198271 582, 987642
 ```
 
 There are no intersections. We have line of sight!
+
+## Roadmap
+
+- [ ] Test against known good lines of sight
+- [ ] Move db to cloud
+- [ ] API
+- [ ] Web UI
