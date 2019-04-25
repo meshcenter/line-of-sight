@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "pg": "^7.10.0",
-    "pg-native": "^3.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-redux": "^7.0.2",
