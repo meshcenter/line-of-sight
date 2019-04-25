@@ -49,6 +49,10 @@ export async function handler(event, context) {
 			return st_astext.replace("POINT(", "").replace(")", ""); // Do this better
 		} catch (err) {
 			console.log(err);
+			return {
+				statusCode: 500,
+				body: `Could not find building data for ${bin}`
+			};
 		}
 	}
 
@@ -62,6 +66,10 @@ export async function handler(event, context) {
 			return parseInt(st_zmax);
 		} catch (err) {
 			console.log(err);
+			return {
+				statusCode: 500,
+				body: `Could not find building data for ${bin}`
+			};
 		}
 	}
 	async function getIntersections(midpoint1, height1, midpoint2, height2) {
@@ -75,6 +83,10 @@ export async function handler(event, context) {
 				.filter(bin => bin !== bin1 && bin !== bin2);
 		} catch (err) {
 			console.log(err);
+			return {
+				statusCode: 500,
+				body: `Could not find intersections for ${bin1} <-> ${bin2}`
+			};
 		}
 	}
 }
