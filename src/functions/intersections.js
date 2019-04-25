@@ -1,4 +1,4 @@
-import pg from "pg";
+import { Client } from "pg";
 
 export async function handler(event, context) {
 	const { queryStringParameters } = event;
@@ -11,7 +11,7 @@ export async function handler(event, context) {
 		};
 	}
 
-	const client = new pg.Client({
+	const client = new Client({
 		host: process.env.DB_HOST,
 		database: process.env.DB_NAME,
 		user: process.env.DB_USER,
@@ -21,7 +21,17 @@ export async function handler(event, context) {
 			mode: "require"
 		}
 	});
-	await client.connect();
+
+	try {
+		await client.connect();
+	} catch (err) {
+		console.log(err);
+		await client.end();
+		return {
+			statusCode: 500,
+			body: "Failed to connect to db"
+		};
+	}
 
 	const midpoint1 = await getBuildingMidpoint(bin1);
 	const midpoint2 = await getBuildingMidpoint(bin2);
@@ -34,6 +44,7 @@ export async function handler(event, context) {
 		height2
 	);
 
+	await client.end();
 	return {
 		statusCode: 200,
 		body: JSON.stringify(intersections)
@@ -49,6 +60,7 @@ export async function handler(event, context) {
 			return st_astext.replace("POINT(", "").replace(")", ""); // Do this better
 		} catch (err) {
 			console.log(err);
+			await client.end();
 			return {
 				statusCode: 500,
 				body: `Could not find building data for ${bin}`
@@ -66,6 +78,7 @@ export async function handler(event, context) {
 			return parseInt(st_zmax);
 		} catch (err) {
 			console.log(err);
+			await client.end();
 			return {
 				statusCode: 500,
 				body: `Could not find building data for ${bin}`
@@ -83,6 +96,7 @@ export async function handler(event, context) {
 				.filter(bin => bin !== bin1 && bin !== bin2);
 		} catch (err) {
 			console.log(err);
+			await client.end();
 			return {
 				statusCode: 500,
 				body: `Could not find intersections for ${bin1} <-> ${bin2}`
