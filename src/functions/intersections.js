@@ -1,6 +1,9 @@
 import { Client } from "pg";
 
 export async function handler(event, context) {
+	// https://github.com/brianc/node-postgres/issues/930#issuecomment-230362178
+	context.callbackWaitsForEmptyEventLoop = false;
+
 	const { queryStringParameters } = event;
 	const { bin1, bin2 } = queryStringParameters;
 
@@ -75,7 +78,8 @@ export async function handler(event, context) {
 		try {
 			const res = await client.query(text, values);
 			const { st_zmax } = res.rows[0];
-			return parseInt(st_zmax);
+			const offset = 4;
+			return parseInt(st_zmax) + offset;
 		} catch (err) {
 			console.log(err);
 			await client.end();

@@ -15,6 +15,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:lambda": "netlify-lambda serve src/functions/ -c webpack.functions.js",
     "build": "react-scripts build && netlify-lambda build src/functions -c ./webpack.functions.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
