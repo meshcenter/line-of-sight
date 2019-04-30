@@ -63,89 +63,132 @@ const targets = [
 	}
 ];
 
+const checkIcon = (
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="24"
+		height="24"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="green"
+		strokeWidth="2"
+		strokeLinecap="round"
+		strokeLinejoin="round"
+	>
+		<polyline points="20 6 9 17 4 12" />
+	</svg>
+);
+
+const xIcon = (
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="24"
+		height="24"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="red"
+		strokeWidth="2"
+		strokeLinecap="round"
+		strokeLinejoin="round"
+	>
+		<line x1="18" y1="6" x2="6" y2="18" />
+		<line x1="6" y1="6" x2="18" y2="18" />
+	</svg>
+);
+
 export default function Form() {
 	const [address, setAddress] = useState("");
-	const [intersections, setIntersections] = useState({});
+	const [results, setResults] = useState({});
 	return (
 		<div className="pv5 ph3">
-			<form
-				className="f4 mw7 w-100 center"
-				onSubmit={event => {
-					event.preventDefault();
-					const newIntersections = {};
-					setIntersections(newIntersections);
-					fetchAddress(address).then(({ bin, label }) => {
-						setAddress(label);
-						targets.forEach(target => {
-							fetchIntersections(bin, target.bin).then(
-								targetIntersections => {
-									newIntersections[
-										target.bin
-									] = targetIntersections;
-									setIntersections({ ...newIntersections });
-								}
-							);
-						});
-					});
-				}}
-			>
-				<p className="fw6 tc mb5">
-					Check for line of sight to supernodes and hubs
-				</p>
-				<div className="flex bg-red">
-					<input
-						name="address"
-						value={address}
-						placeholder="Street address"
-						className="pa3 shadow-1 w-100"
-						onChange={({ target }) => setAddress(target.value)}
-					/>
-				</div>
-				<input
-					type="submit"
-					value="Check"
-					className="bn fr pa3 white bg-red br2 fw6 f5-ns f6 ttu shadow mt4-ns mt3 pointer w-auto-ns w-100"
-				/>
-			</form>
-			<div className="measure-narrow center mt6">
-				<ul className="list ma0 pa0">
-					{targets.map(target => {
-						const targetIntersections = intersections[target.bin];
-						const loading = !targetIntersections;
-						if (loading) return null;
-
-						const error =
-							targetIntersections.length &&
-							targetIntersections[0] === "error";
-						const visible =
-							targetIntersections && !targetIntersections.length;
-						const label = visible
-							? "Line of sight!"
-							: `${targetIntersections.length} intersections`;
-						return (
-							<li
-								key={target.bin}
-								className="pv2 bb b--light-gray flex items-center justify-between"
-							>
-								<div>
-									<span className="">
-										{visible ? "✅" : "❌"}
-									</span>
-									<span className="ml2 fw6">
-										{target.name}
-									</span>
-								</div>
-								<span
-									className={
-										visible && !error ? "green" : "red"
+			<div className="measure center">
+				<form
+					className="f4"
+					onSubmit={event => {
+						event.preventDefault();
+						const newResults = {};
+						setResults(newResults);
+						fetchAddress(address).then(({ bin, label }) => {
+							setAddress(label);
+							targets.forEach(target => {
+								fetchIntersections(bin, target.bin).then(
+									result => {
+										newResults[target.bin] = result;
+										setResults({ ...newResults });
 									}
+								);
+							});
+						});
+					}}
+				>
+					<p className="fw6 tc mb5">
+						Check for line of sight to supernodes and hubs
+					</p>
+					<div className="flex bg-red">
+						<input
+							name="address"
+							value={address}
+							placeholder="Street address"
+							className="pa3 shadow-1 w-100"
+							onChange={({ target }) => setAddress(target.value)}
+						/>
+					</div>
+					<input
+						type="submit"
+						value="Check"
+						className="bn fr pa3 white bg-red br2 fw6 f5-ns f6 ttu shadow mt4-ns mt3 pointer w-auto-ns w-100"
+					/>
+				</form>
+				<div className="measure center mt6">
+					<ul className="list ma0 pa0">
+						{targets.map(target => {
+							const loading = !results[target.bin];
+							if (loading) return null;
+
+							const { distance, intersections, error } = results[
+								target.bin
+							];
+							const inRange = distance < 8000; // ~1.5 miles
+							const rangeLabel = `${(distance / 5280).toFixed(
+								1
+							)} mi`;
+							const visible =
+								intersections && !intersections.length;
+							const visibleLabel = error
+								? error
+								: visible
+								? "Line of sight!"
+								: `${intersections.length} intersections`;
+							return (
+								<li
+									key={target.bin}
+									className="pv2 bb b--light-gray flex items-center justify-between"
 								>
-									{!error ? label : "Error"}
-								</span>
-							</li>
-						);
-					})}
-				</ul>
+									<div className="w-third flex items-center">
+										{visible && inRange ? checkIcon : xIcon}
+										<span className="ml2">
+											{target.name}
+										</span>
+									</div>
+									<span
+										className={
+											visible && !error ? "green" : "red"
+										}
+									>
+										{visibleLabel}
+									</span>
+									<span
+										className={
+											inRange && !error ? "green" : "red"
+										}
+									>
+										{rangeLabel}
+									</span>
+								</li>
+							);
+						})}
+					</ul>
+				</div>
 			</div>
 		</div>
 	);
@@ -167,11 +210,12 @@ async function fetchAddress(address) {
 
 async function fetchIntersections(bin1, bin2) {
 	try {
-		const intersections = await fetch(
+		const { distance, intersections, error } = await fetch(
 			`/.netlify/functions/intersections/?bin1=${bin1}&bin2=${bin2}`
 		).then(res => res.json());
-		return intersections;
+		if (error) throw error;
+		return { distance, intersections, error };
 	} catch (error) {
-		return ["error"];
+		return { error: "Error" };
 	}
 }
