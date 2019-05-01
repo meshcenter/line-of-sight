@@ -124,12 +124,12 @@ export default function Form() {
 					<p className="fw6 tc mb5">
 						Check for line of sight to supernodes and hubs
 					</p>
-					<div className="flex bg-red">
+					<div className="flex">
 						<input
 							name="address"
 							value={address}
 							placeholder="Street address"
-							className="pa3 shadow-1 w-100"
+							className="pa3 w-100 br2 ba b--moon-gray"
 							onChange={({ target }) => setAddress(target.value)}
 						/>
 					</div>
