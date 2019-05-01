@@ -112,7 +112,7 @@ export async function handler(event, context) {
 		const [x2, y2] = midpoint2.split(" ");
 		const text = `SELECT a.bldg_bin FROM ny AS a WHERE ST_3DIntersects(a.geom, ST_SetSRID('LINESTRINGZ (${x1} ${y1} ${height1}, ${x2} ${y2} ${height2})'::geometry, 2263)) LIMIT 10`;
 		const res = await client.query(text);
-		if (!res.rows.length)
+		if (!res.rows)
 			throw `Could not find intersections for ${bin1} <-> ${bin2}`;
 		return res.rows
 			.map(row => row.bldg_bin)
