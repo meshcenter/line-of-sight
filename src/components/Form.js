@@ -55,7 +55,7 @@ const targets = [
 	},
 	{
 		name: "Cypress Inn",
-		bin: "3333240"
+		bin: "4081837"
 	},
 	{
 		name: "SN4",
