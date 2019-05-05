@@ -58,6 +58,10 @@ const targets = [
 		bin: "4081837"
 	},
 	{
+		name: "SN3",
+		bin: "3336893",
+	},
+	{
 		name: "SN4",
 		bin: "3029670"
 	}
