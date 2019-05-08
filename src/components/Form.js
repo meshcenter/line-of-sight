@@ -50,6 +50,18 @@ const targets = [
 		bin: "3057781"
 	},
 	{
+		name: "3085",
+		bin: "3073369"
+	},
+	{
+		name: "Dekalb",
+		bin: "3325497"
+	},
+	{
+		name: "RiseBoro",
+		bin: "3387654"
+	},
+	{
 		name: "Soft Surplus",
 		bin: "3319903"
 	},
