@@ -46,6 +46,10 @@ const targets = [
 		bin: "3050714"
 	},
 	{
+		name: "Flo",
+		bin: "3057781"
+	},
+	{
 		name: "Soft Surplus",
 		bin: "3319903"
 	},
