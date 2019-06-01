@@ -80,6 +80,10 @@ const targets = [
 	{
 		name: "SN4",
 		bin: "3029670"
+	},
+	{
+		name: "Guernsey Hub",
+		bin: "3065507"
 	}
 ];
 
