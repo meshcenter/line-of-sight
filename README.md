@@ -6,9 +6,9 @@ Check if line of sight exists between any two addresses in NYC.
 
 Install dependencies:
 
-- Python
-- Postgres
-- PostGIS
+-   Python
+-   Postgres
+-   PostGIS
 
 Create a table in the db:
 
@@ -61,12 +61,11 @@ ST_AsText(ST_Centroid((SELECT geom FROM ny WHERE bldg_bin = '1006184'))) as b;
 ```sql
 SELECT ST_ZMax((SELECT geom FROM ny WHERE bldg_bin = '1001389')) as a,
 ST_ZMax((SELECT geom FROM ny WHERE bldg_bin = '1006184')) as b;
-#         a         |        b         
+#         a         |        b
 # ------------------+------------------
 #  582.247499999998 | 120.199699999997
 # (1 row)
 ```
-
 
 ### Step 4: Check for intersections:
 
@@ -81,9 +80,20 @@ WHERE ST_3DIntersects(a.geom, ST_SetSRID('LINESTRINGZ (983915 198271 582, 987642
 
 There are no intersections. We have line of sight!
 
+## API
+
+The db
+
+## Web UI
+
+### `npm start`
+
+Runs the app in the development mode.<br>
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
 ## Roadmap
 
-- [ ] Test against known good lines of sight
-- [ ] Move db to cloud
-- [ ] API
-- [ ] Web UI
+-   [ ] Test against known good lines of sight
+-   [ ] Move db to cloud
+-   [ ] API
+-   [ ] Web UI
