@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import DocumentTitle from "react-document-title";
 import { Link } from "react-router-dom";
 import qs from "qs";
 
@@ -82,10 +83,14 @@ export default function ResultsList(props) {
 		<div>
 			<p className="lh-copy dark-gray">
 				{allFailed
-					? "Building data not found. Please try another address."
+					? "Building data not found."
 					: allLoaded
 					? linesOfSight.length
-						? `${linesOfSight.length} possible connections found!`
+						? `${linesOfSight.length} possible ${
+								linesOfSight.length > 1
+									? "connections"
+									: "connection"
+						  } found!`
 						: "No possible connections found."
 					: "Checking for lines of sight. This might take a few moments..."}
 			</p>
@@ -170,14 +175,16 @@ export default function ResultsList(props) {
 	);
 
 	return (
-		<div>
-			<h1 className="f4 fw7 mv3">{address}</h1>
-			{renderStatus()}
-			{allFailed ? null : renderList()}
-			<Link to="/" className="flex red no-underline mt4">
-				Check another address
-			</Link>
-		</div>
+		<DocumentTitle title={`${address} - Line of Sight`}>
+			<div>
+				<h1 className="f4 fw7 mv3">{address}</h1>
+				{renderStatus()}
+				{allFailed ? null : renderList()}
+				<Link to="/" className="flex red no-underline mt4">
+					Check another address →
+				</Link>
+			</div>
+		</DocumentTitle>
 	);
 }
 
