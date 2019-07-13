@@ -23,7 +23,7 @@ export default function AddressInput(props) {
   let input;
 
   return (
-    <div className="mv4">
+    <div>
       <label className="db mb2 fw5" htmlFor="address">
         Building address
       </label>
@@ -76,7 +76,6 @@ export default function AddressInput(props) {
         }}
         onChange={(event, value) => onChange(value)}
         onSelect={(value, item) => {
-          console.log(value, item);
           onSelect({
             address: value,
             bin: item.properties.pad_bin
