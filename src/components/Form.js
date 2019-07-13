@@ -27,7 +27,6 @@ export default function Form(props) {
 
 	return (
 		<form onSubmit={onSubmit}>
-			<div style={{ height: "18px" }} />
 			<h1 className="f4 fw7 mb5 mv3">
 				Check for line of sight to supernodes and hubs
 			</h1>

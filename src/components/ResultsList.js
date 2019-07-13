@@ -171,12 +171,12 @@ export default function ResultsList(props) {
 
 	return (
 		<div>
-			<Link to="/" className="flex red no-underline">
-				Change address
-			</Link>
 			<h1 className="f4 fw7 mv3">{address}</h1>
 			{renderStatus()}
 			{allFailed ? null : renderList()}
+			<Link to="/" className="flex red no-underline mt4">
+				Check another address
+			</Link>
 		</div>
 	);
 }
