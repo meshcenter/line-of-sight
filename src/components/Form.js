@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import AddressInput from "./AddressInput";
 
 const targets = [
 	{
@@ -75,7 +76,7 @@ const targets = [
 	},
 	{
 		name: "SN3",
-		bin: "3336893",
+		bin: "3336893"
 	},
 	{
 		name: "SN4",
@@ -98,6 +99,9 @@ const checkIcon = (
 		strokeWidth="2"
 		strokeLinecap="round"
 		strokeLinejoin="round"
+		style={{
+			minWidth: "24"
+		}}
 	>
 		<polyline points="20 6 9 17 4 12" />
 	</svg>
@@ -110,10 +114,13 @@ const xIcon = (
 		height="24"
 		viewBox="0 0 24 24"
 		fill="none"
-		stroke="red"
+		stroke="silver"
 		strokeWidth="2"
 		strokeLinecap="round"
 		strokeLinejoin="round"
+		style={{
+			minWidth: "24"
+		}}
 	>
 		<line x1="18" y1="6" x2="6" y2="18" />
 		<line x1="6" y1="6" x2="18" y2="18" />
@@ -122,92 +129,163 @@ const xIcon = (
 
 export default function Form() {
 	const [address, setAddress] = useState("");
+	const [bin, setBin] = useState();
 	const [results, setResults] = useState({});
+	const [hideResults, setHideResults] = useState(true);
+	const [hideForm, setHideForm] = useState(false);
 	return (
-		<div className="pv5 ph3">
+		<div className="pv5-ns pv3 ph3">
 			<div className="measure center">
-				<form
-					className="f4"
-					onSubmit={event => {
-						event.preventDefault();
-						const newResults = {};
-						setResults(newResults);
-						fetchAddress(address).then(({ bin, label }) => {
-							setAddress(label);
+				{hideForm ? (
+					<div className="justify-between items-center">
+						<button
+							className="pa0 bn bg-transparent nowrap pointer red"
+							onClick={() => {
+								setAddress("");
+								setResults({});
+								setHideForm(false);
+								setHideResults(true);
+							}}
+						>
+							Back
+						</button>
+						<h2 className="f4 fw6">{address}</h2>
+					</div>
+				) : (
+					<form
+						onSubmit={event => {
+							event.preventDefault();
+							setHideForm(true);
+							setHideResults(false);
+							const newResults = {};
+							setResults(newResults);
+							let buildingNotFound = false;
 							targets.forEach(target => {
 								fetchIntersections(bin, target.bin).then(
 									result => {
+										if (result.error && !buildingNotFound) {
+											alert("Building not found");
+											buildingNotFound = true;
+										}
 										newResults[target.bin] = result;
 										setResults({ ...newResults });
 									}
 								);
 							});
-						});
-					}}
-				>
-					<p className="fw6 tc mb5">
-						Check for line of sight to supernodes and hubs
-					</p>
-					<div className="flex">
-						<input
-							name="address"
-							value={address}
-							placeholder="Street address"
-							className="pa3 w-100 br2 ba b--moon-gray"
-							onChange={({ target }) => setAddress(target.value)}
+						}}
+					>
+						<div style={{ height: "18px" }} />
+						<p className="f4 fw6 mb5 mt3">
+							Check for line of sight to supernodes and hubs
+						</p>
+						<AddressInput
+							address={address}
+							onChange={address => {
+								setAddress(address);
+								setResults({});
+								setHideResults(true);
+							}}
+							onSelect={({ address, bin }) => {
+								setAddress(address);
+								setBin(bin);
+								setResults({});
+								setHideResults(true);
+							}}
 						/>
-					</div>
-					<input
-						type="submit"
-						value="Check"
-						className="bn fr pa3 white bg-red br2 fw6 f5-ns f6 ttu shadow mt4-ns mt3 pointer w-auto-ns w-100"
-					/>
-				</form>
-				<div className="measure center mt6">
+
+						<input
+							type="submit"
+							value="Check"
+							className="bn fr pa3 white bg-red br2 fw6 f5-ns f6 ttu shadow mv3 pointer w-auto-ns w-100"
+						/>
+					</form>
+				)}
+				<div className="measure center mt3">
 					<ul className="list ma0 pa0">
 						{targets.map(target => {
+							if (hideResults) return null;
 							const loading = !results[target.bin];
-							if (loading) return null;
+							if (loading)
+								return (
+									<li
+										key={target.bin}
+										className="pv2 bb b--light-gray flex items-center justify-between"
+									>
+										<div className="w-third flex items-center">
+											<div
+												style={{
+													width: "24px",
+													height: "24px",
+													minWidth: "24px"
+												}}
+											>
+												<div className="spinner" />
+											</div>
+											<span className="ml2 silver">
+												{target.name}
+											</span>
+										</div>
+									</li>
+								);
 
 							const { distance, intersections, error } = results[
 								target.bin
 							];
 							const inRange = distance < 8000; // ~1.5 miles
-							const rangeLabel = `${(distance / 5280).toFixed(
-								1
-							)} mi`;
+							const rangeLabel = error
+								? "Error"
+								: `${(distance / 5280).toFixed(1)} mi`;
 							const visible =
 								intersections && !intersections.length;
 							const visibleLabel = error
-								? error
+								? ""
 								: visible
-								? "Line of sight!"
-								: `${intersections.length} intersections`;
+								? ""
+								: `${
+										intersections.length == 10
+											? "10+"
+											: intersections.length
+								  } ${
+										intersections.length > 1
+											? "intersections"
+											: "intersection"
+								  }`;
+							const hasLOS = visible && inRange && !error;
 							return (
 								<li
 									key={target.bin}
 									className="pv2 bb b--light-gray flex items-center justify-between"
 								>
 									<div className="w-third flex items-center">
-										{visible && inRange ? checkIcon : xIcon}
-										<span className="ml2">
+										{hasLOS ? checkIcon : xIcon}
+										<span
+											className={`ml2 ${
+												hasLOS ? "green fw6" : "silver"
+											}`}
+										>
 											{target.name}
 										</span>
 									</div>
-									<span
-										className={
-											visible && !error ? "green" : "red"
-										}
-									>
-										{visibleLabel}
-									</span>
-									<span
-										className={
-											inRange && !error ? "green" : "red"
-										}
-									>
-										{rangeLabel}
-									</span>
+									<div className="w-50-ns w-two-thirds pl3 flex items-center justify-between">
+										<span
+											className={
+												visible && !error
+													? "green fw6"
+													: "silver"
+											}
+										>
+											{visibleLabel}
+										</span>
+										<span
+											className={
+												inRange && !error
+													? "green fw6"
+													: "silver"
+											}
+										>
+											{rangeLabel}
+										</span>
+									</div>
 								</li>
 							);
 						})}
@@ -216,20 +294,6 @@ export default function Form() {
 			</div>
 		</div>
 	);
-}
-
-async function fetchAddress(address) {
-	const binResRaw = await fetch(
-		`https://geosearch.planninglabs.nyc/v1/search?text=${address}`
-	);
-	const binRes = await binResRaw.json();
-	const { features } = binRes;
-	if (!features.length) {
-		alert("Address not found");
-		return;
-	}
-	const { label, pad_bin: bin } = features[0].properties;
-	return { label, bin };
 }
 
 async function fetchIntersections(bin1, bin2) {
