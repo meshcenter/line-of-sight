@@ -73,6 +73,7 @@ export default function ResultsList(props) {
 	const linesOfSight = allResults.filter(
 		result =>
 			!result.error &&
+			result.intersections &&
 			!result.intersections.length &&
 			result.distance < RANGE_LIMIT
 	);
@@ -122,19 +123,18 @@ export default function ResultsList(props) {
 				const inRange = distance < RANGE_LIMIT; // ~1.5 miles
 				const rangeLabel = `${(distance / 5280).toFixed(1)} mi`;
 				const visible = intersections && !intersections.length;
-				const visibleLabel = error
-					? ""
-					: visible
-					? ""
-					: `${
-							intersections.length === 10
-								? "10+"
-								: intersections.length
-					  } ${
-							intersections.length > 1
-								? "intersections"
-								: "intersection"
-					  }`;
+				const visibleLabel =
+					error || visible || !intersections
+						? ""
+						: `${
+								intersections.length === 10
+									? "10+"
+									: intersections.length
+						  } ${
+								intersections.length > 1
+									? "intersections"
+									: "intersection"
+						  }`;
 				const hasLOS = visible && inRange && !error;
 				return (
 					<li
