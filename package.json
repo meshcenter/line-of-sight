@@ -6,6 +6,8 @@
     "netlify-lambda": "^1.4.5",
     "pg": "^7.10.0",
     "react": "^16.8.6",
+    "react-autocomplete": "^1.8.1",
+    "react-document-title": "^2.0.3",
     "react-dom": "^16.8.6",
     "react-redux": "^7.0.2",
     "react-router-dom": "^5.0.0",
