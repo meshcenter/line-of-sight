@@ -80,6 +80,10 @@ export default [
 		bin: "3029670"
 	},
 	{
+		name: "TT",
+		bin: "3029628"
+	},
+	{
 		name: "Guernsey Hub",
 		bin: "3065507"
 	}
