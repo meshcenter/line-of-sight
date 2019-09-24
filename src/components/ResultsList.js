@@ -44,7 +44,32 @@ const xIcon = (
 	</svg>
 );
 
+const questionIcon = (
+	<svg
+		width="24"
+		height="24"
+		viewBox="0 0 14 16"
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		strokeWidth="2"
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		style={{
+			minWidth: "24"
+		}}
+	>
+		<path
+			fillRule="evenodd"
+			clipRule="evenodd"
+			d="M6 9H8V11H6V9ZM10 5.5C10 7.64 8 8 8 8H6C6 7.45 6.45 7 7 7H7.5C7.78 7 8 6.78 8 6.5V5.5C8 5.22 7.78 5 7.5 5H6.5C6.22 5 6 5.22 6 5.5V6H4C4 4.5 5.5 3 7 3C8.5 3 10 4 10 5.5ZM7 1.29999C10.14 1.29999 12.7 3.85999 12.7 6.99999C12.7 10.14 10.14 12.7 7 12.7C3.86 12.7 1.3 10.14 1.3 6.99999C1.3 3.85999 3.86 1.29999 7 1.29999ZM7 0C3.14 0 0 3.14 0 7C0 10.86 3.14 14 7 14C10.86 14 14 10.86 14 7C14 3.14 10.86 0 7 0Z"
+			transform="translate(0 1)"
+			fill="rgb(255, 99, 0)"
+		/>
+	</svg>
+);
+
 const RANGE_LIMIT = 8000; // ~1.5 miles
+const RANGE_LIMIT_2 = 10500; // ~1.5 miles
 
 export default function ResultsList(props) {
 	const { location } = props;
@@ -56,12 +81,15 @@ export default function ResultsList(props) {
 		if (!address || !bin) return;
 		const newResults = {};
 		setResults(newResults);
-		targets.forEach(target => {
-			fetchIntersections(bin, target.bin).then(result => {
+		async function checkTargets() {
+			for (var i = 0; i < targets.length; i++) {
+				const target = targets[i];
+				const result = await fetchIntersections(bin, target.bin);
 				newResults[target.bin] = result;
 				setResults({ ...newResults });
-			});
-		});
+			}
+		}
+		checkTargets();
 	}, [address, bin]);
 
 	if (!results || !targets) return null;
@@ -76,7 +104,7 @@ export default function ResultsList(props) {
 			!result.error &&
 			result.intersections &&
 			!result.intersections.length &&
-			result.distance < RANGE_LIMIT
+			result.distance < RANGE_LIMIT_2
 	);
 
 	const renderStatus = () => (
@@ -126,6 +154,7 @@ export default function ResultsList(props) {
 
 				const { distance, intersections, error } = results[target.bin];
 				const inRange = distance < RANGE_LIMIT; // ~1.5 miles
+				const maybeInRange = distance < RANGE_LIMIT_2; // ~2 miles
 				const rangeLabel = `${(distance / 5280).toFixed(1)} mi`;
 				const visible = intersections && !intersections.length;
 				const visibleLabel =
@@ -147,10 +176,18 @@ export default function ResultsList(props) {
 						className="pv2 bb b--light-gray flex items-center justify-between"
 					>
 						<div className="w-third flex items-center">
-							{hasLOS ? checkIcon : xIcon}
+							{visible
+								? hasLOS
+									? checkIcon
+									: questionIcon
+								: xIcon}
 							<span
 								className={`ml2 ${
-									hasLOS ? "green fw6" : "silver"
+									visible
+										? hasLOS
+											? "green fw6"
+											: "orange"
+										: "silver"
 								}`}
 							>
 								{target.name}
@@ -162,7 +199,13 @@ export default function ResultsList(props) {
 								<span className={"silver"}>Error</span>
 							) : (
 								<span
-									className={inRange ? "green fw6" : "silver"}
+									className={
+										maybeInRange
+											? inRange
+												? "green fw6"
+												: "orange fw6"
+											: "silver"
+									}
 								>
 									{rangeLabel}
 								</span>
