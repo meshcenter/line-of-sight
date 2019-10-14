@@ -69,7 +69,7 @@ const questionIcon = (
 );
 
 const RANGE_LIMIT = 8000; // ~1.5 miles
-const RANGE_LIMIT_2 = 10500; // ~1.5 miles
+const RANGE_LIMIT_2 = 10500; // ~2 miles
 
 export default function ResultsList(props) {
 	const { location } = props;
