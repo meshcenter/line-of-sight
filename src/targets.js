@@ -84,10 +84,6 @@ export default [
 		bin: "3336893"
 	},
 	{
-		name: "SN4",
-		bin: "3029670"
-	},
-	{
 		name: "PH 3461",
 		bin: "3029628"
 	},
