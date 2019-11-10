@@ -36,7 +36,7 @@ export default function Form(props) {
 		<DocumentTitle title="Line of Sight">
 			<form
 				onSubmit={onSubmit}
-				className="measure-wide center pv5-ns pv3"
+				className="measure-wide center pv5-ns pa3"
 			>
 				<h1 className="f4 fw7 mb5 mv3">
 					Check for line of sight to supernodes and hubs

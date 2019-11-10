@@ -1,4 +1,4 @@
-import React, { useState, useRef, createRef } from "react";
+import React from "react";
 import { GoogleMap, LoadScript } from "@react-google-maps/api";
 
 import NodeMarker from "./NodeMarker";
@@ -100,7 +100,7 @@ export default function MapComponent(props) {
 							west: minLng
 						};
 
-						map.fitBounds(newBounds, 32);
+						map.fitBounds(newBounds, window.innerWidth / 10);
 					}}
 				>
 					<NodeLayer nodes={nodes} />

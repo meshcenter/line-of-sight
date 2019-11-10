@@ -1,6 +1,5 @@
 import React from "react";
 import { OverlayView } from "@react-google-maps/api";
-import { Link } from "react-router-dom";
 
 const getPixelPositionOffset = (width, height) => ({
 	x: -width / 2,
@@ -14,7 +13,7 @@ export default function NodeDetail(props) {
 		return null;
 	}
 
-	const { lat, lng, panoramas = [] } = node;
+	const { lat, lng } = node;
 
 	return (
 		<OverlayView

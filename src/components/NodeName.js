@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React from "react";
 
 export const icons = {
 	dead: (
@@ -145,7 +145,7 @@ export const icons = {
 };
 
 export default function NodeName(props) {
-	const { node, search } = props;
+	const { node } = props;
 	const name = node.name || node.id;
 	return (
 		<div className="h1 w-100 overflow-visible flex justify-start items-center">

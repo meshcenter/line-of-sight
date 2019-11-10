@@ -3,7 +3,7 @@ import { Polyline } from "@react-google-maps/api";
 
 export default function LinkLine(props) {
 	const { link, visible } = props;
-	const { nodes, devices, device_types } = link; // TODO: This is weird
+	const { nodes, devices } = link; // TODO: This is weird
 	const { lat: lat1, lng: lng1 } = devices[0];
 	const { lat: lat2, lng: lng2 } = devices[1];
 	const path = [{ lat: lat1, lng: lng1 }, { lat: lat2, lng: lng2 }];

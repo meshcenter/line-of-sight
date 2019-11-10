@@ -17,7 +17,7 @@ export default function ResultsList(props) {
 		if (!address || !bin) return;
 		async function fetchLos() {
 			const results = await (await fetch(
-				`https://api.nycmesh.net/los?bin=${bin}`
+				`${process.env.REACT_APP_API_ROOT}/los?bin=${bin}`
 			)).json();
 			setResults(results);
 		}
@@ -39,24 +39,39 @@ export default function ResultsList(props) {
 			return (
 				<div className="pa3 br2 flex flex-column">
 					<div className="fw6 mv0 flex items-center">
-						<span className="f4 mr1">😞</span>{" "}
+						<span
+							className="f4 mr2"
+							role="img"
+							aria-label="disappointed emoji"
+						>
+							😞
+						</span>
 						<span>No line of sight</span>
 					</div>
 					<p className="mid-gray mb0 mt2 lh-copy">
 						There are no nearby visible nodes.
 					</p>
+					<Link to="/" className="flex red no-underline nowrap mt2">
+						Check another address →
+					</Link>
 				</div>
 			);
 		return (
 			<div className="pa3 flex flex-column">
 				<div className="fw6 mv0 flex items-center">
-					<span className="f4 mr1">🎉</span>{" "}
-					<span>You have line of sight!</span>
+					<span
+						className="f4 mr2"
+						role="img"
+						aria-label="celebration emoji"
+					>
+						🎉
+					</span>
+					<span>Line of sight!</span>
 				</div>
 				<p className="mid-gray mb0 mt2 lh-copy">
-					There {losNodes.length === 1 ? "is" : "are"}{" "}
-					{losNodes.length} nearby visible{" "}
-					{losNodes.length === 1 ? "node" : "nodes"}.
+					{`You can connect to ${losNodes.length} ${
+						losNodes.length === 1 ? "node" : "nodes"
+					}.`}
 				</p>
 			</div>
 		);
@@ -64,19 +79,13 @@ export default function ResultsList(props) {
 
 	return (
 		<DocumentTitle title={`${address} - Line of Sight`}>
-			<div className=" flex flex-column h-100">
+			<div className=" flex-l flex-column h-100">
 				<div className="flex items-center justify-between pa3 bb b--light-gray">
 					<h1 className="f4 fw6 mv0">{address}</h1>
-					<Link
-						to="/"
-						className="flex red no-underline mv0 nowrap ml3"
-					>
-						Check another address →
-					</Link>
 				</div>
 				{results ? (
-					<div className="flex flex-row-reverse-l flex-column w-100 h-100">
-						<div className="h-100 w-100">
+					<div className="flex flex-row-reverse-l flex-column w-100 h-100-l">
+						<div className="h-100-l h5 w-100">
 							{results ? (
 								<MapView
 									nodes={[
@@ -123,7 +132,7 @@ export default function ResultsList(props) {
 						</div>
 						<div className="br-l b--light-gray w-100 measure-narrow-l h-100 flex flex-column">
 							{renderStatus()}
-							<div className="h-100 overflow-y-scroll">
+							<div className="h-100 overflow-y-scroll-l">
 								{losNodes.length ? (
 									<div className="">
 										<ul className="list ma0 pa0">
@@ -139,6 +148,12 @@ export default function ResultsList(props) {
 												</li>
 											))}
 										</ul>
+										<Link
+											to="/"
+											className="flex red no-underline nowrap mt3 ml3"
+										>
+											Check another address →
+										</Link>
 									</div>
 								) : null}
 							</div>
