@@ -38,10 +38,10 @@ export default function Form(props) {
 				onSubmit={onSubmit}
 				className="measure-wide center pv5-ns pa3"
 			>
-				<h1 className="f4 fw7 mb5 mv3">
-					Check for line of sight to supernodes and hubs
+				<h1 className="f3 fw7 mb5 mv3">
+					Check for line of sight to nearby nodes
 				</h1>
-				<p className="lh-copy dark-gray">
+				<p className="lh-copy mid-gray">
 					This tool uses the{" "}
 					<a
 						target="_"
@@ -61,11 +61,11 @@ export default function Form(props) {
 				<input
 					tabIndex="2"
 					type="submit"
-					value="Check"
+					value="Check line of sight"
 					disabled={disabled}
 					className={`bn fr pa3 white ${
 						disabled ? "bg-moon-gray" : "bg-red pointer"
-					} br2 fw6 f5-ns f6 ttu shadow mv3 w-auto-ns w-100`}
+					} br2 fw6 f5-ns f6 shadow mv3 w-auto-ns w-100`}
 				/>
 			</form>
 		</DocumentTitle>

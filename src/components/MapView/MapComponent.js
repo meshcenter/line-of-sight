@@ -100,7 +100,7 @@ export default function MapComponent(props) {
 							west: minLng
 						};
 
-						map.fitBounds(newBounds, window.innerWidth / 10);
+						map.fitBounds(newBounds, window.innerWidth / 20);
 					}}
 				>
 					<NodeLayer nodes={nodes} />
