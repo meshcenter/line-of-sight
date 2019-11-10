@@ -6,8 +6,8 @@ import ResultsList from "./components/ResultsList";
 export default function App() {
 	return (
 		<Router>
-			<div className="helvetica mv5-ns mv3 ph3">
-				<div className="measure-wide center">
+			<div className="helvetica absolute absolute--fill ">
+				<div className="h-100 w-100">
 					<Route path="/" exact component={Form} />
 					<Route path="/search/" component={ResultsList} />
 				</div>

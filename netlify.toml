@@ -1,4 +1,3 @@
 [build]
   publish = "build"
-  command = "yarn build:lambda && yarn build"
-  functions = "./api"
+  command = "yarn build"
