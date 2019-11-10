@@ -79,8 +79,8 @@ export default function ResultsList(props) {
 
 	return (
 		<DocumentTitle title={`${address} - Line of Sight`}>
-			<div className=" flex-l flex-column h-100">
-				<div className="flex items-center justify-between pa3 bb b--light-gray">
+			<div className="flex-l flex-column h-100">
+				<div className="flex items-center justify-between pa3 bb b--light-gray flex-shrink-0">
 					<h1 className="f4 fw6 mv0">{address}</h1>
 				</div>
 				{results ? (
