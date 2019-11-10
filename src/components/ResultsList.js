@@ -80,14 +80,14 @@ export default function ResultsList(props) {
 							{results ? (
 								<MapView
 									nodes={[
+										...losNodes,
 										{
 											id: address.split(",")[0],
 											lat: parseFloat(lat),
 											lng: parseFloat(lng),
 											devices: [],
 											status: "los"
-										},
-										...losNodes
+										}
 									]}
 									links={[
 										...losNodes.map(omniNode => ({
