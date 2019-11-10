@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@react-google-maps/api": "^1.7.9",
     "netlify-lambda": "^1.4.5",
     "pg": "^7.10.0",
     "react": "^16.8.6",
     "react-autocomplete": "^1.8.1",
     "react-document-title": "^2.0.3",
     "react-dom": "^16.8.6",
+    "react-google-maps": "^9.4.5",
     "react-redux": "^7.0.2",
     "react-router-dom": "^5.0.0",
     "react-scripts": "3.0.0",
@@ -17,9 +19,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:lambda": "netlify-lambda serve src/functions/ -c webpack.functions.js",
     "build": "react-scripts build",
-    "build:lambda": "netlify-lambda build src/functions/ -c webpack.functions.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

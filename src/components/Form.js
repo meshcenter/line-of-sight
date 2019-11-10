@@ -6,29 +6,38 @@ import AddressInput from "./AddressInput";
 export default function Form(props) {
 	const [address, setAddress] = useState("");
 	const [bin, setBin] = useState();
+	const [lat, setLat] = useState();
+	const [lng, setLng] = useState();
 	const [disabled, setDisabled] = useState(true);
 
 	const onChange = address => {
 		setAddress(address);
 		setDisabled(true);
 	};
-	const onSelect = ({ address, bin }) => {
+	const onSelect = ({ address, bin, lat, lng }) => {
 		setAddress(address);
 		setBin(bin);
+		setLat(lat);
+		setLng(lng);
 		setDisabled(false);
 	};
 	const onSubmit = event => {
 		event.preventDefault();
 		const query = qs.stringify({
 			address,
-			bin
+			bin,
+			lat,
+			lng
 		});
 		props.history.push(`/search?${query}`);
 	};
 
 	return (
 		<DocumentTitle title="Line of Sight">
-			<form onSubmit={onSubmit}>
+			<form
+				onSubmit={onSubmit}
+				className="measure-wide center pv5-ns pa3"
+			>
 				<h1 className="f4 fw7 mb5 mv3">
 					Check for line of sight to supernodes and hubs
 				</h1>

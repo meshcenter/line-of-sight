@@ -78,7 +78,9 @@ export default function AddressInput(props) {
         onSelect={(value, item) => {
           onSelect({
             address: value,
-            bin: item.properties.pad_bin
+            bin: item.properties.pad_bin,
+            lat: item.geometry.coordinates[1],
+            lng: item.geometry.coordinates[0]
           });
           input.blur();
         }}
