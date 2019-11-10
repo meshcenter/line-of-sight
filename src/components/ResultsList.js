@@ -132,7 +132,7 @@ export default function ResultsList(props) {
 						</div>
 						<div className="br-l b--light-gray w-100 measure-narrow-l h-100 flex flex-column">
 							{renderStatus()}
-							<div className="h-100 overflow-y-scroll-l">
+							<div className="h-100 overflow-y-scroll-l pb3">
 								{losNodes.length ? (
 									<div className="">
 										<ul className="list ma0 pa0">
@@ -150,7 +150,7 @@ export default function ResultsList(props) {
 										</ul>
 										<Link
 											to="/"
-											className="flex red no-underline nowrap mt3 ml3"
+											className="flex red no-underline nowrap mh3 mt3"
 										>
 											Check another address →
 										</Link>
