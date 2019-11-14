@@ -24,8 +24,33 @@ export default function ResultsList(props) {
 		fetchLos();
 	}, [address, bin]);
 
+	if (results && results.error) return <div>{results.error}</div>;
+
 	const losNodes = results
-		? [...results.visibleSectors, ...results.visibleOmnis].filter(
+		? [
+				...results.visibleSectors,
+				...results.visibleOmnis,
+				...results.visibleRequests.map(request => ({
+					...request,
+					status: "los",
+					devices: [
+						{
+							type: {
+								id: 1,
+								name: "Planned",
+								manufacturer: null,
+								range: 0,
+								width: 0
+							},
+							lat: parseFloat(request.lat),
+							lng: parseFloat(request.lng),
+							alt: parseFloat(request.alt),
+							azimuth: 0,
+							status: "active"
+						}
+					]
+				}))
+		  ].filter(
 				node =>
 					node.devices.filter(
 						device => device.type.name !== "Unknown"
@@ -119,7 +144,7 @@ export default function ResultsList(props) {
 														id: 1,
 														name: "Omni",
 														manufacturer: null,
-														range: 0.5,
+														range: 0,
 														width: 360
 													}
 												},
@@ -130,30 +155,39 @@ export default function ResultsList(props) {
 								/>
 							) : null}
 						</div>
-						<div className="br-l b--light-gray w-100 measure-narrow-l h-100 flex flex-column">
+						<div className="br-l b--light-gray w-100 measure-narrow-l h-100 overflow-y-scroll-l">
 							{renderStatus()}
-							<div className="h-100 overflow-y-scroll-l pb3">
+							<div className="h-100">
 								{losNodes.length ? (
 									<div className="">
 										<ul className="list ma0 pa0">
-											{losNodes.map(node => (
-												<li className="bb b--light-gray pv3 pointer ph3 flex items-center justify-between">
-													<NodeName node={node} />
-													<span className="mid-gray db f6">
-														{
-															node.devices[0].type
-																.name
-														}
-													</span>
-												</li>
-											))}
+											{losNodes.map(node => {
+												const nonUnknown = node.devices.filter(
+													d =>
+														d.type.name !==
+														"Unknown"
+												);
+												const device =
+													nonUnknown[0] ||
+													node.devices[0];
+												return (
+													<li className="bb b--light-gray pv3 pointer ph3 flex items-center justify-between">
+														<NodeName node={node} />
+														<span className="mid-gray db f6">
+															{device.type.name}
+														</span>
+													</li>
+												);
+											})}
 										</ul>
-										<Link
-											to="/"
-											className="flex red no-underline nowrap mh3 mt3"
-										>
-											Check another address →
-										</Link>
+										<div className="pv3">
+											<Link
+												to="/"
+												className="flex red no-underline nowrap mh3 "
+											>
+												Check another address →
+											</Link>
+										</div>
 									</div>
 								) : null}
 							</div>

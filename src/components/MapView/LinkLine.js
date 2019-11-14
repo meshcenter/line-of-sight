@@ -2,7 +2,7 @@ import React from "react";
 import { Polyline } from "@react-google-maps/api";
 
 export default function LinkLine(props) {
-	const { link, visible } = props;
+	const { link } = props;
 	const { nodes, devices } = link; // TODO: This is weird
 	const { lat: lat1, lng: lng1 } = devices[0];
 	const { lat: lat2, lng: lng2 } = devices[1];
@@ -40,7 +40,7 @@ export default function LinkLine(props) {
 		strokeOpacity,
 		zIndex
 	};
-	return <Polyline path={path} options={options} visible={visible} />;
+	return <Polyline path={path} options={options} />;
 }
 
 const isSupernode = node => node.name && node.name.includes("Supernode");
