@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Marker } from "@react-google-maps/api";
 import Tooltip from "./Tooltip";
 
@@ -10,7 +10,7 @@ export default function NodeMarker(props) {
 	const zIndex = getZ(node);
 	const opacity = 1;
 	return (
-		<>
+		<Fragment>
 			<Marker
 				position={{ lat, lng }}
 				title={title}
@@ -20,7 +20,7 @@ export default function NodeMarker(props) {
 				onClick={onClick}
 			/>
 			<Tooltip node={node} />
-		</>
+		</Fragment>
 	);
 }
 

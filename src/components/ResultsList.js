@@ -24,32 +24,41 @@ export default function ResultsList(props) {
 		fetchLos();
 	}, [address, bin]);
 
-	if (results && results.error) return <div>{results.error}</div>;
+	const {
+		visibleSectors = [],
+		visibleOmnis = [],
+		visibleRequests = [],
+		error
+	} = results || {};
+
+	const nodeFromRequest = request => ({
+		...request,
+		name: (request.address || "").split(",")[0],
+		status: "los",
+		devices: [
+			{
+				id: request.id,
+				type: {
+					id: -1,
+					name: "Planned",
+					manufacturer: null,
+					range: 0,
+					width: 0
+				},
+				lat: parseFloat(request.lat),
+				lng: parseFloat(request.lng),
+				alt: parseFloat(request.alt),
+				azimuth: 0,
+				status: "active"
+			}
+		]
+	});
 
 	const losNodes = results
 		? [
-				...results.visibleSectors,
-				...results.visibleOmnis,
-				...results.visibleRequests.map(request => ({
-					...request,
-					status: "los",
-					devices: [
-						{
-							type: {
-								id: 1,
-								name: "Planned",
-								manufacturer: null,
-								range: 0,
-								width: 0
-							},
-							lat: parseFloat(request.lat),
-							lng: parseFloat(request.lng),
-							alt: parseFloat(request.alt),
-							azimuth: 0,
-							status: "active"
-						}
-					]
-				}))
+				...visibleSectors,
+				...visibleOmnis,
+				...visibleRequests.map(nodeFromRequest)
 		  ].filter(
 				node =>
 					node.devices.filter(
@@ -57,6 +66,75 @@ export default function ResultsList(props) {
 					).length
 		  )
 		: [];
+
+	function renderHeader() {
+		return (
+			<div className="flex items-center justify-between pa3 bb b--light-gray flex-shrink-0">
+				<h1 className="f4 fw6 mv0">{address}</h1>
+				<div>
+					<a
+						target="_"
+						className="blue link"
+						href={`https://earth.google.com/web/search/${address
+							.split(" ")
+							.map(encodeURIComponent)
+							.join("+")}/@${lat},${lng},${(results || {})
+							.buildingHeight / 3.32 ||
+							100}a,300d,35y,0.6h,65t,0r`}
+					>
+						View Earth →
+					</a>
+				</div>
+			</div>
+		);
+	}
+
+	function renderMap() {
+		const mapNodes = [
+			...losNodes,
+			{
+				id: address.split(",")[0],
+				lat: parseFloat(lat),
+				lng: parseFloat(lng),
+				devices: [],
+				status: "los"
+			}
+		];
+		const mapLinks = [
+			...losNodes.map((losNode, index) => ({
+				id: losNode.id,
+				status: "los",
+				nodes: [
+					{
+						id: `${losNode.id}-${index}`
+					},
+					losNode
+				],
+				devices: [
+					{
+						id: losNode.id + "fake",
+						lat: parseFloat(lat),
+						lng: parseFloat(lng),
+						alt: 100,
+						device_type_id: 1,
+						type: {
+							id: 1,
+							name: "Omni",
+							manufacturer: null,
+							range: 0,
+							width: 360
+						}
+					},
+					losNode.devices[0]
+				]
+			}))
+		];
+		return (
+			<div className="h-100-l h5 w-100">
+				{results ? <MapView nodes={mapNodes} links={mapLinks} /> : null}
+			</div>
+		);
+	}
 
 	function renderStatus() {
 		if (!results) return null;
@@ -102,97 +180,60 @@ export default function ResultsList(props) {
 		);
 	}
 
+	function renderList() {
+		return (
+			<div className="">
+				{losNodes.length ? (
+					<div className="">
+						<ul className="list ma0 pa0">
+							{losNodes.map(node => {
+								const nonUnknown = node.devices.filter(
+									d => d.type.name !== "Unknown"
+								);
+								const device = nonUnknown[0] || node.devices[0];
+								return (
+									<li
+										key={node.id}
+										className="bb b--light-gray pv3 pointer ph3 flex items-center justify-between"
+									>
+										<NodeName node={node} />
+										<span className="mid-gray db f6">
+											{device.type.name}
+										</span>
+									</li>
+								);
+							})}
+						</ul>
+						<div className="pv3">
+							<Link
+								to="/"
+								className="flex red no-underline nowrap mh3 "
+							>
+								Check another address →
+							</Link>
+						</div>
+					</div>
+				) : null}
+			</div>
+		);
+	}
+
 	return (
 		<DocumentTitle title={`${address} - Line of Sight`}>
 			<div className="flex-l flex-column h-100">
-				<div className="flex items-center justify-between pa3 bb b--light-gray flex-shrink-0">
-					<h1 className="f4 fw6 mv0">{address}</h1>
-				</div>
+				{renderHeader()}
 				{results ? (
-					<div className="flex flex-row-reverse-l flex-column w-100 h-100-l">
-						<div className="h-100-l h5 w-100">
-							{results ? (
-								<MapView
-									nodes={[
-										...losNodes,
-										{
-											id: address.split(",")[0],
-											lat: parseFloat(lat),
-											lng: parseFloat(lng),
-											devices: [],
-											status: "los"
-										}
-									]}
-									links={[
-										...losNodes.map(omniNode => ({
-											id: "asdf",
-											status: "los",
-											nodes: [
-												{
-													id: "1234"
-												},
-												omniNode
-											],
-											devices: [
-												{
-													id: "test",
-													lat: parseFloat(lat),
-													lng: parseFloat(lng),
-													alt: 100,
-													device_type_id: 1,
-													type: {
-														id: 1,
-														name: "Omni",
-														manufacturer: null,
-														range: 0,
-														width: 360
-													}
-												},
-												omniNode.devices[0]
-											]
-										}))
-									]}
-								/>
-							) : null}
-						</div>
-						<div className="br-l b--light-gray w-100 measure-narrow-l h-100 overflow-y-scroll-l">
-							{renderStatus()}
-							<div className="h-100">
-								{losNodes.length ? (
-									<div className="">
-										<ul className="list ma0 pa0">
-											{losNodes.map(node => {
-												const nonUnknown = node.devices.filter(
-													d =>
-														d.type.name !==
-														"Unknown"
-												);
-												const device =
-													nonUnknown[0] ||
-													node.devices[0];
-												return (
-													<li className="bb b--light-gray pv3 pointer ph3 flex items-center justify-between">
-														<NodeName node={node} />
-														<span className="mid-gray db f6">
-															{device.type.name}
-														</span>
-													</li>
-												);
-											})}
-										</ul>
-										<div className="pv3">
-											<Link
-												to="/"
-												className="flex red no-underline nowrap mh3 "
-											>
-												Check another address →
-											</Link>
-										</div>
-									</div>
-								) : null}
+					error ? (
+						<div>{results.error}</div>
+					) : (
+						<div className="flex flex-row-reverse-l flex-column w-100 h-100-l">
+							{renderMap()}
+							<div className="br-l b--light-gray w-100 measure-narrow-l h-100 overflow-y-scroll-l">
+								{renderStatus()}
+								{renderList()}
 							</div>
 						</div>
-					</div>
+					)
 				) : null}
 			</div>
 		</DocumentTitle>

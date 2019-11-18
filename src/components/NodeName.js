@@ -152,8 +152,8 @@ export default function NodeName(props) {
 			<div className="mr2 flex items-center justify-center">
 				{icons.omni}
 			</div>
-			<div className="flex-1 truncate">
-				<span className="db f5 fw5 black mv0">{name}</span>
+			<div className="">
+				<span className="f5 fw5 black">{name}</span>
 			</div>
 		</div>
 	);
