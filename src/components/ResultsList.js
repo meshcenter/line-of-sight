@@ -17,7 +17,7 @@ export default function ResultsList(props) {
 		if (!address || !bin) return;
 		async function fetchLos() {
 			const results = await (await fetch(
-				`${process.env.REACT_APP_API_ROOT}/los?bin=${bin}`
+				`${process.env.REACT_APP_API_ROOT}/v1/los?bin=${bin}`
 			)).json();
 			setResults(results);
 		}
@@ -224,7 +224,17 @@ export default function ResultsList(props) {
 				{renderHeader()}
 				{results ? (
 					error ? (
-						<div>{results.error}</div>
+						<div className="pa3">
+							{results.error}
+							<div className="pv3">
+								<Link
+									to="/"
+									className="flex red no-underline nowrap "
+								>
+									Check another address →
+								</Link>
+							</div>
+						</div>
 					) : (
 						<div className="flex flex-row-reverse-l flex-column w-100 h-100-l">
 							{renderMap()}
