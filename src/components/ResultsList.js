@@ -12,6 +12,7 @@ export default function ResultsList(props) {
 	);
 
 	const [results, setResults] = useState();
+	const [showPlanned, setShowPlanned] = useState(false);
 
 	useEffect(() => {
 		if (!address || !bin) return;
@@ -58,7 +59,7 @@ export default function ResultsList(props) {
 		? [
 				...visibleSectors,
 				...visibleOmnis,
-				...visibleRequests.map(nodeFromRequest)
+				...(showPlanned ? visibleRequests.map(nodeFromRequest) : [])
 		  ].filter(
 				node =>
 					node.devices.filter(
@@ -71,20 +72,7 @@ export default function ResultsList(props) {
 		return (
 			<div className="flex items-center justify-between pa3 bb b--light-gray flex-shrink-0">
 				<h1 className="f4 fw6 mv0">{address}</h1>
-				<div>
-					<a
-						target="_"
-						className="blue link"
-						href={`https://earth.google.com/web/search/${address
-							.split(" ")
-							.map(encodeURIComponent)
-							.join("+")}/@${lat},${lng},${(results || {})
-							.buildingHeight / 3.32 ||
-							100}a,300d,35y,0.6h,65t,0r`}
-					>
-						View Earth →
-					</a>
-				</div>
+				<div className="db-ns dn">{viewEarth()}</div>
 			</div>
 		);
 	}
@@ -131,7 +119,7 @@ export default function ResultsList(props) {
 		];
 		return (
 			<div className="h-100-l h5 w-100">
-				{results ? <MapView nodes={mapNodes} links={mapLinks} /> : null}
+				<MapView nodes={mapNodes} links={mapLinks} />
 			</div>
 		);
 	}
@@ -182,7 +170,7 @@ export default function ResultsList(props) {
 
 	function renderList() {
 		return (
-			<div className="">
+			<div>
 				{losNodes.length ? (
 					<div className="">
 						<ul className="list ma0 pa0">
@@ -204,6 +192,19 @@ export default function ResultsList(props) {
 								);
 							})}
 						</ul>
+						{visibleRequests.length ? (
+							<div className="ph3 pt3 flex items-center">
+								<div
+									className="gray pointer"
+									onClick={() => setShowPlanned(!showPlanned)}
+								>
+									{showPlanned
+										? "Hide planned"
+										: "Show planned"}
+								</div>
+							</div>
+						) : null}
+						<div className="dn-ns db mh3 mt3">{viewEarth()}</div>
 						<div className="pv3">
 							<Link
 								to="/"
@@ -218,33 +219,51 @@ export default function ResultsList(props) {
 		);
 	}
 
+	function viewEarth() {
+		return (
+			<a
+				target="_"
+				className="blue link"
+				href={`https://earth.google.com/web/search/${address
+					.split(" ")
+					.map(encodeURIComponent)
+					.join("+")}/@${lat},${lng},${(results || {})
+					.buildingHeight / 3.32 || 100}a,300d,35y,0.6h,65t,0r`}
+			>
+				View Earth →
+			</a>
+		);
+	}
+
 	return (
 		<DocumentTitle title={`${address} - Line of Sight`}>
 			<div className="flex-l flex-column h-100">
 				{renderHeader()}
-				{results ? (
-					error ? (
-						<div className="pa3">
-							{results.error}
-							<div className="pv3">
-								<Link
-									to="/"
-									className="flex red no-underline nowrap "
-								>
-									Check another address →
-								</Link>
+
+				{results
+					? ((error ? (
+							<div className="pa3">
+								{results.error}
+								<div className="pv3">
+									<Link
+										to="/"
+										className="flex red no-underline nowrap "
+									>
+										Check another address →
+									</Link>
+								</div>
+								<div className="dn-ns db">{viewEarth()}</div>
 							</div>
-						</div>
-					) : (
-						<div className="flex flex-row-reverse-l flex-column w-100 h-100-l">
-							{renderMap()}
-							<div className="br-l b--light-gray w-100 measure-narrow-l h-100 overflow-y-scroll-l">
-								{renderStatus()}
-								{renderList()}
+					  ) : (
+							<div className="flex flex-row-reverse-l flex-column w-100 h-100-l overflow-y-hidden">
+								{renderMap()}
+								<div className="br-l b--light-gray w-100 measure-narrow-l overflow-y-scroll-l">
+									{renderStatus()}
+									{renderList()}
+								</div>
 							</div>
-						</div>
-					)
-				) : null}
+					  )): null)
+					: null}
 			</div>
 		</DocumentTitle>
 	);
