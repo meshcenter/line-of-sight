@@ -26,7 +26,7 @@ export default function Search(props) {
 	const nodeFromRequest = request => ({
 		...request,
 		name: (request.address || "").split(",")[0],
-		status: "los",
+		status: "planned",
 		devices: [
 			{
 				id: request.id,

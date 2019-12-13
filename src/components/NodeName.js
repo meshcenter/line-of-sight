@@ -150,7 +150,7 @@ export default function NodeName(props) {
 	return (
 		<div className="h1 w-100 overflow-visible flex justify-start items-center">
 			<div className="mr2 flex items-center justify-center">
-				{icons.omni}
+				{node.status === "planned" ? icons.potential : icons.omni}
 			</div>
 			<div className="">
 				<span className="f5 fw5 black">{name}</span>

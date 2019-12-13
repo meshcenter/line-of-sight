@@ -27,7 +27,7 @@ export default function NodeMarker(props) {
 function getIcon(node) {
 	const { name, notes, devices, status } = node;
 
-	if (status === "los")
+	if (status === "los" || status === "planned")
 		return {
 			url: "/img/map/potential.svg",
 			anchor: { x: 6, y: 6 }
