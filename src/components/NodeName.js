@@ -148,7 +148,7 @@ export default function NodeName(props) {
 	const { node } = props;
 	const name = node.name || node.id;
 	return (
-		<div className="h1 w-100 overflow-visible flex justify-start items-center">
+		<div className="flex justify-start items-center">
 			<div className="mr2 flex items-center justify-center">
 				{node.status === "planned" ? icons.potential : icons.omni}
 			</div>

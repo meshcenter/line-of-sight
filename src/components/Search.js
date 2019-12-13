@@ -68,7 +68,7 @@ export default function Search(props) {
 				{renderHeader()}
 				<div className="flex flex-row-reverse-l flex-column w-100 h-100-l overflow-y-hidden">
 					{renderMap()}
-					<div className="br-l b--light-gray w-100 measure-narrow-l overflow-y-scroll-l">
+					<div className="br-l b--light-gray w-100 mw5-5-l overflow-y-scroll-l">
 						{renderStatus()}
 						{renderList()}
 						{renderLinks()}
@@ -131,23 +131,31 @@ export default function Search(props) {
 		return (
 			<div>
 				<ul className="list ma0 pa0">
-					{losNodes.map(node => {
-						const nonUnknown = node.devices.filter(
-							d => d.type.name !== "Unknown"
-						);
-						const device = nonUnknown[0] || node.devices[0];
-						return (
-							<li
-								key={node.id}
-								className="bb b--light-gray pv3 pointer ph3 flex items-center justify-between"
-							>
-								<NodeName node={node} />
-								<span className="mid-gray db f6">
-									{device.type.name}
-								</span>
-							</li>
-						);
-					})}
+					{losNodes
+						.sort((a, b) => a.distance - b.distance)
+						.map(node => {
+							const nonUnknown = node.devices.filter(
+								d => d.type.name !== "Unknown"
+							);
+							const device = nonUnknown[0] || node.devices[0];
+							return (
+								<li
+									key={node.id}
+									className="bb b--light-gray pv3 pointer ph3 flex items-center justify-between"
+								>
+									<NodeName node={node} />
+									<div>
+										<span className="mid-gray db f6 nowrap">
+											{device.type.name} ·{" "}
+											{parseFloat(
+												node.distance / 1000
+											).toFixed(1)}
+											km
+										</span>
+									</div>
+								</li>
+							);
+						})}
 				</ul>
 			</div>
 		);

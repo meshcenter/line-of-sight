@@ -4,3 +4,9 @@ https://github.com/tomchentw/react-google-maps/issues/764#issuecomment-442163940
 .g-map > div {
 	background-color: transparent !important;
 }
+
+@media screen and (min-width: 60rem) {
+	.mw5-5-l {
+		max-width: 24rem;
+	}
+}
