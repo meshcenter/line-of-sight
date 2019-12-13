@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Form from "./components/Form";
-import ResultsList from "./components/ResultsList";
+import Search from "./components/Search";
 
 export default function App() {
 	return (
@@ -9,7 +9,7 @@ export default function App() {
 			<div className="helvetica absolute absolute--fill ">
 				<div className="h-100 w-100">
 					<Route path="/" exact component={Form} />
-					<Route path="/search/" component={ResultsList} />
+					<Route path="/search/" component={Search} />
 				</div>
 			</div>
 		</Router>

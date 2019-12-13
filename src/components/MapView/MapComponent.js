@@ -5,7 +5,7 @@ import NodeMarker from "./NodeMarker";
 import LinkLine from "./LinkLine";
 import Sector from "./Sector";
 
-const DEFAULT_ZOOM = 14;
+const DEFAULT_ZOOM = 15;
 const DEFAULT_CENTER = { lat: 40.69, lng: -73.9595798 };
 
 const options = {
