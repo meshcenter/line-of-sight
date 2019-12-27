@@ -50,7 +50,7 @@ const isBackbone = (node, device_type) =>
 	isSupernode(node) || isHub(node) || isOmni(device_type);
 
 function getColor(node1, node2, device_type1, device_type2, link) {
-	if (link.status === "los") return "#00f";
+	if (link.status === "los") return "#f0f";
 	if (isBackbone(node1, device_type1) && isBackbone(node2, device_type2))
 		return "rgb(0,122,255)";
 	return "rgb(255,45,85)";

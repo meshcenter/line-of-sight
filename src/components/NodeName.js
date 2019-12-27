@@ -148,13 +148,8 @@ export default function NodeName(props) {
 	const { node } = props;
 	const name = node.name || node.id;
 	return (
-		<div className="flex justify-start items-center">
-			<div className="mr2 flex items-center justify-center">
-				{node.status === "planned" ? icons.potential : icons.omni}
-			</div>
-			<div className="">
-				<span className="f5 fw5 black">{name}</span>
-			</div>
+		<div className="flex items-center">
+			<span className="f6 black">{name}</span>
 		</div>
 	);
 }
