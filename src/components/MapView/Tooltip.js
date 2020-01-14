@@ -28,12 +28,10 @@ export default function NodeDetail(props) {
 				}
 				className="flex flex-column items-center"
 			>
-				<div className="flex items-center bg-white br2 overflow-hidden shadow-2">
-					<div className="pv1 ph2 flex flex-column justify-end">
-						<span className="f5 fw6 nowrap sans-serif">
-							{node.name || node.id}
-						</span>
-					</div>
+				<div className="flex items-center bg-white br1 overflow-hidden shadow pv05 ph1">
+					<span className="f6 nowrap helvetica db">
+						{node.name || node.id}
+					</span>
 				</div>
 				<svg
 					viewBox="0 5 12 12"
@@ -41,6 +39,7 @@ export default function NodeDetail(props) {
 					width="12"
 					height="12"
 					aria-hidden="true"
+					style={{ marginTop: "-1px" }}
 				>
 					<path fillRule="evenodd" fill="white" d="M0 5l6 6 6-6H0z" />
 				</svg>

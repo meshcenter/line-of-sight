@@ -5,8 +5,8 @@ import NodeMarker from "./NodeMarker";
 import LinkLine from "./LinkLine";
 import Sector from "./Sector";
 
-const DEFAULT_ZOOM = 15;
-const DEFAULT_CENTER = { lat: 40.69, lng: -73.9595798 };
+const DEFAULT_ZOOM = 12;
+const DEFAULT_CENTER = { lat: 40.683, lng: -73.928 };
 
 const options = {
 	fullscreenControl: false,
@@ -59,12 +59,16 @@ const options = {
 };
 
 export default function MapComponent(props) {
-	const { nodes, links } = props;
+	const { nodes, links, loading } = props;
 	const [map, setMap] = useState();
 	useEffect(() => {
 		if (!map) return;
+		if (loading) return;
+		if (!nodes.length) return;
+
 		if (nodes.length === 1) {
 			const { lat, lng } = nodes[0];
+			if (!lat || !lng) return null;
 			map.panTo({ lng, lat });
 			return;
 		}
@@ -90,8 +94,10 @@ export default function MapComponent(props) {
 		};
 
 		map.fitBounds(newBounds, window.innerWidth / 20);
-	}, [nodes, map]);
+	}, [nodes, map, loading]);
+
 	if (!nodes || !links) throw new Error("Missing nodes or links");
+
 	return (
 		<div className="h-100 w-100 flex flex-column">
 			<LoadScript
@@ -119,19 +125,23 @@ export default function MapComponent(props) {
 
 function NodeLayer(props) {
 	const { nodes } = props;
-	return nodes.map(node => <NodeMarker key={node.id} node={node} />);
+	return nodes.map((node, index) => (
+		<NodeMarker key={[node.id, index].join("-")} node={node} />
+	));
 }
 
 function LinkLayer(props) {
 	const { links } = props;
-	return links.map(link => <LinkLine key={link.id} link={link} />);
+	return links.map(link => (
+		<LinkLine key={`${JSON.stringify(link.nodes)}`} link={link} />
+	));
 }
 
 function SectorLayer(props) {
 	const { nodes } = props;
 	return nodes.map(node =>
-		(node.devices || []).map((device, index) => (
-			<Sector key={device.id} device={device} />
-		))
+		(node.devices || [])
+			.filter(device => device.status === "active")
+			.map((device, index) => <Sector key={device.id} device={device} />)
 	);
 }
