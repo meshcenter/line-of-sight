@@ -214,7 +214,7 @@ function List({
 			{visibleRequests.length ? (
 				<div className="ma3 flex items-center">
 					<button
-						className="gray pointer bn pa0 f6"
+						className="gray pointer bn pa0 f6 bg-transparent"
 						onClick={() => setShowPlanned(!showPlanned)}
 						style={{ outline: "none" }}
 					>
