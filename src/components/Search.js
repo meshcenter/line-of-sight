@@ -305,7 +305,7 @@ function Map({ lat, lng, address, losNodes, results }) {
 	);
 
 	return (
-		<div className="h-100-l h5 w-100 relative">
+		<div className="w-100 relative map-height">
 			<MapView nodes={mapNodes} links={mapLinks} loading={!results} />
 		</div>
 	);

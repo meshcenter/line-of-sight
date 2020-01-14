@@ -73,7 +73,8 @@ export default function AddressInput(props) {
         overflow: "auto",
         maxHeight: "50%", // TODO: don't cheat, let it flow to the bottom
         borderRadius: "0.5rem",
-        maxWidth: "calc(100vw - 32px)"
+        maxWidth: "calc(100vw - 32px)",
+        marginRight: "1rem"
       }}
       onChange={event => setValue(event.target.value)}
       onSelect={(value, item) => {
