@@ -5,10 +5,8 @@ https://github.com/tomchentw/react-google-maps/issues/764#issuecomment-442163940
 	background-color: transparent !important;
 }
 
-@media screen and (min-width: 60rem) {
-	.mw5-5-l {
-		max-width: 24rem;
-	}
+.map-height {
+	height: calc(75vh - 53px);
 }
 
 .pv05 {
@@ -18,4 +16,14 @@ https://github.com/tomchentw/react-google-maps/issues/764#issuecomment-442163940
 
 .shadow {
 	box-shadow: rgba(66, 66, 66, 0.5) 0px 0.5rem 1rem 0px;
+}
+
+@media screen and (min-width: 60rem) {
+	.mw5-5-l {
+		max-width: 24rem;
+	}
+
+	.map-height {
+		height: 100%;
+	}
 }
