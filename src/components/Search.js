@@ -61,6 +61,8 @@ export default function Search(props) {
 		]
 	});
 
+	const title = address ? `${address} - Line of Sight` : "Line of Sight";
+
 	const { visibleSectors = [], visibleOmnis = [], visibleRequests = [] } =
 		results || {};
 
@@ -78,7 +80,7 @@ export default function Search(props) {
 		: [];
 
 	return (
-		<DocumentTitle title={`${address} - Line of Sight`}>
+		<DocumentTitle title={title}>
 			<div className="flex-l flex-column h-100">
 				<Header address={address} onSelect={onSelect} />
 				<div className="flex flex-row-reverse-l flex-column w-100 h-100-l overflow-y-hidden">
