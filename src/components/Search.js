@@ -118,12 +118,19 @@ function Header({ address, onSelect }) {
 	return (
 		<div className="flex items-center justify-between pv2 pr3 bb b--light-gray">
 			<div className="w-100-l mw5-5-l ph3 ">
-				<Link to="/" className="link black">
-					<div className="flex items-center">
-						<div className="h1 w1 br-pill bg-gold" />
-						<span className="ml2 fw5 nowrap">NYC Mesh</span>
-					</div>
-				</Link>
+				<div className="flex items-center justify-start">
+					<Link to="/" className="link black">
+						<span className=" fw5 nowrap flex items-center">
+							<span
+								className="f4"
+								role="img"
+								aria-label="telescope emoji"
+							>
+								🔭
+							</span>
+						</span>
+					</Link>
+				</div>
 			</div>
 			<AddressInput defaultAddress={address} onSelect={onSelect} />
 		</div>
@@ -146,7 +153,7 @@ function List({
 			message = "Building data not found.";
 		}
 		return (
-			<div className="pa3 br2 flex flex-column">
+			<div className="mt3 pa3 mh3 ba b--light-gray bg-washed-yellow br2 flex flex-column">
 				<div className="fw6 mv0 flex items-center">
 					<span
 						className="f4 mr2"
@@ -164,9 +171,19 @@ function List({
 
 	if (results && !losNodes.length)
 		return (
-			<div className="pa3 br2 flex flex-column">
-				<p className="mid-gray mv0 lh-copy">
-					There are no nearby visible nodes. 😞
+			<div className="pa3 mh3 ba b--light-gray bg-washed-yellow br2 flex flex-column">
+				<div className="fw5 f5 mv0 flex items-center">
+					<span
+						className="f4 mr2"
+						role="img"
+						aria-label="disappointed emoji"
+					>
+						😞
+					</span>
+					<span>No line of sight</span>
+				</div>
+				<p className="mid-gray mb0 mt2 lh-copy">
+					There are no nearby visible nodes.
 				</p>
 			</div>
 		);
@@ -195,11 +212,13 @@ function List({
 			{visibleRequests.length ? (
 				<div className="ma3 flex items-center">
 					<button
-						className="blue pointer bn pa0"
+						className="gray pointer bn pa0 f6"
 						onClick={() => setShowPlanned(!showPlanned)}
 						style={{ outline: "none" }}
 					>
-						{showPlanned ? "Hide planned" : "Show planned"}
+						{showPlanned
+							? "Hide planned"
+							: `Show planned (${visibleRequests.length})`}
 					</button>
 				</div>
 			) : null}
@@ -209,7 +228,7 @@ function List({
 	function NodeRow({ node, device }) {
 		return (
 			<li className="bb b--light-gray pv2 pointer ph3 flex items-start justify-between">
-				<div className="flex items-center mr3">
+				<div className="flex items-center mr4">
 					<div className="mr3 flex items-center justify-center">
 						{node.status === "planned"
 							? icons.potential
@@ -222,15 +241,17 @@ function List({
 							</span>
 						</div>
 						<div className="mt1">
-							<span className="f7 mid-gray bg-near-white ph1 pv05 br1">
-								{device.type.name}
+							<span className="mid-gray db f6 nowrap">
+								{`${parseFloat(node.distance / 1000).toFixed(
+									1
+								)}km`}
 							</span>
 						</div>
 					</div>
 				</div>
 				<div>
-					<span className="mid-gray db f6 nowrap">
-						{`${parseFloat(node.distance / 1000).toFixed(1)}km`}
+					<span className="f7 black-50 bg-near-white ph1 pv05 br1">
+						{device.type.name}
 					</span>
 				</div>
 			</li>
@@ -314,7 +335,11 @@ function Links({ lat, lng, address, results }) {
 		<div>
 			{results && lat && lng ? (
 				<div className="ma3">
-					<a target="_" className="blue link nowrap " href={earthURL}>
+					<a
+						target="_"
+						className="blue link nowrap f6"
+						href={earthURL}
+					>
 						View Earth →
 					</a>
 				</div>
@@ -327,7 +352,7 @@ function Info({ address }) {
 	if (address) return null;
 	return (
 		<div className="pa3">
-			<h1 className="f4 fw7 mt0 mb3">
+			<h1 className="f4 fw7 mt0 mb3 lh-title">
 				Check for line of sight to nearby nodes
 			</h1>
 			<p className="lh-copy mid-gray">
@@ -339,8 +364,8 @@ function Info({ address }) {
 				>
 					NYC 3D Building Model
 				</a>{" "}
-				to see if your roof can connect to nearby nodes. The data is
-				from 2014, so results are not 100% accurate.
+				to check if your roof can connect to nearby nodes. Results are
+				not 100% accurate!
 			</p>
 		</div>
 	);

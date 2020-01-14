@@ -94,7 +94,7 @@ export default function MapComponent(props) {
 		};
 
 		map.fitBounds(newBounds, window.innerWidth / 20);
-	}, [nodes, map]);
+	}, [nodes, map, loading]);
 
 	if (!nodes || !links) throw new Error("Missing nodes or links");
 

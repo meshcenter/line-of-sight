@@ -21,8 +21,13 @@ export default function AddressInput(props) {
     fetchSuggestions();
   }, [value]);
 
+  let input;
+
   return (
     <Autocomplete
+      ref={element => {
+        input = element;
+      }}
       value={value}
       items={suggestions[value] || []}
       getItemValue={item => {
@@ -72,12 +77,14 @@ export default function AddressInput(props) {
       }}
       onChange={event => setValue(event.target.value)}
       onSelect={(value, item) => {
+        setValue(value);
         onSelect({
           address: value,
           bin: item.properties.pad_bin,
           lat: item.geometry.coordinates[1],
           lng: item.geometry.coordinates[0]
         });
+        input.blur();
       }}
     />
   );
