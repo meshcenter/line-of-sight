@@ -326,26 +326,43 @@ function BuildingInfo({ address, results }) {
 	);
 }
 
-function Links({ lat, lng, address, results }) {
-	if (!address) return null;
+function Links({ lat, lng, address = "", results }) {
 	const earthURL = `https://earth.google.com/web/search/${address
 		.split(" ")
 		.map(encodeURIComponent)
 		.join("+")}/@${lat},${lng},${(results || {}).buildingHeight / 3.32 ||
 		100}a,300d,35y,0.6h,65t,0r`;
+
+	if (results && lat && lng)
+		return (
+			<div>
+				{results && lat && lng ? (
+					<div className="ma3">
+						<a
+							target="_"
+							className="blue link nowrap f6"
+							href={earthURL}
+						>
+							View Earth →
+						</a>
+					</div>
+				) : null}
+			</div>
+		);
+
+	if (address) return null;
+
 	return (
 		<div>
-			{results && lat && lng ? (
-				<div className="ma3">
-					<a
-						target="_"
-						className="blue link nowrap f6"
-						href={earthURL}
-					>
-						View Earth →
-					</a>
-				</div>
-			) : null}
+			<div className="ma3">
+				<a
+					target="_"
+					className="mid-gray link nowrap f6"
+					href="https://github.com/meshcenter/line-of-sight"
+				>
+					GitHub →
+				</a>
+			</div>
 		</div>
 	);
 }
