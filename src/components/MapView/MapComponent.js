@@ -102,7 +102,7 @@ export default function MapComponent(props) {
 		<div className="h-100 w-100 flex flex-column">
 			<LoadScript
 				id="script-loader"
-				googleMapsApiKey="AIzaSyBNClp7oJsw-eleEoR3-PQKV23tpeW-FpE"
+				googleMapsApiKey="AIzaSyBkBIy80YVhu7nYjVweruALNkpgFKquIEw"
 				loadingElement={<div />}
 			>
 				<GoogleMap
