@@ -81,7 +81,7 @@ export default function AddressInput(props) {
         setValue(value);
         onSelect({
           address: value,
-          bin: item.properties.addendum.pad_bin,
+          bin: item.properties.addendum.pad.bin,
           lat: item.geometry.coordinates[1],
           lng: item.geometry.coordinates[0]
         });
