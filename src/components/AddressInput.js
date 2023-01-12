@@ -9,7 +9,7 @@ export default function AddressInput(props) {
   useEffect(() => {
     async function fetchSuggestions() {
       if (!value) return;
-      const URL = `https://geosearch.planninglabs.nyc/v1/autocomplete?text=${value}`;
+      const URL = `https://geosearch.planninglabs.nyc/v2/autocomplete?text=${value}`;
       const res = await fetch(URL);
       const json = await res.json();
       const { features } = json;
@@ -81,7 +81,7 @@ export default function AddressInput(props) {
         setValue(value);
         onSelect({
           address: value,
-          bin: item.properties.pad_bin,
+          bin: item.properties.addendum.pad.bin,
           lat: item.geometry.coordinates[1],
           lng: item.geometry.coordinates[0]
         });
